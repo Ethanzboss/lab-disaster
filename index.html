@@ -432,6 +432,11 @@ const skinChoices=['#7b452d','#b97852','#d59b72','#edc09b'],hairChoices=['#17131
 // Last-resort hit testing keeps controls usable if a browser reports the canvas
 // as the pointer target while an overlay is visible.
 addEventListener('pointerup',e=>{if(e.target.closest?.('button'))return;let b=[...document.querySelectorAll('button')].find(q=>{let r=q.getBoundingClientRect(),s=getComputedStyle(q);return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom});if(b){e.preventDefault();b.click()}},true);
+// Final pause contract: P and Escape pause every active mode, including the
+// escape cinematic, and the loop stops while the pause screen is visible.
+const finalStaminaUpdate=updateStamina;updateStamina=function(dt){if(paused)return;finalStaminaUpdate(dt)};
+togglePause=function(){if(!run||state==='dead'||state==='win')return;refreshCatalogue();paused=!paused;document.getElementById('paused').classList.toggle('hide',!paused);if(paused)document.getElementById('settingsPanel')?.classList.add('hide')};
+document.getElementById('forgePanel')?.remove();document.getElementById('forgeButton')?.remove();document.getElementById('settingsForge')?.remove();toggleForge=function(){return};
 const testInvUpdate=update;
 update=function(dt){testInvUpdate(dt);if(player.testInvincible){player.hp=player.max;player.inv=.2}};
 const clearTestInvincibility=reset;
